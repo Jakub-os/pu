@@ -1,0 +1,1755 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expresta Special Effects Dropdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+:root {
+  --page-bg: linear-gradient(180deg, #f7f8fb 0%, #eceef4 100%);
+  --surface: #ffffff;
+  --panel-bg: #f4f4f4;
+  --hero-bg: #ebebed;
+  --text-primary: #42566b;
+  --text-secondary: #566c83;
+  --text-muted: #66798f;
+  --line: rgba(0, 0, 0, 0.13);
+  --line-strong: rgba(66, 86, 107, 0.22);
+  --warning-bg: #f5f5fb;
+  --shadow: 0 24px 70px rgba(54, 73, 94, 0.15);
+  --radius: 5px;
+  --panel-width: 1296px;
+  --panel-height: 521px;
+  --left-width: 448px;
+  --transition: 180ms ease;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--text-primary);
+  font-family: "Mulish", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.page-shell {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.special-effects-dialog {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: minmax(360px, var(--left-width)) minmax(0, 1fr);
+  height: min(var(--panel-height), calc(100vh - 48px));
+  max-width: var(--panel-width);
+  overflow: hidden;
+  position: relative;
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+  width: min(100%, var(--panel-width));
+}
+
+.special-effects-dialog.is-closed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.99);
+}
+
+.special-effects-dialog__left {
+  background: var(--panel-bg);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.left-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 24px;
+  scrollbar-color: rgba(86, 108, 131, 0.4) transparent;
+  scrollbar-width: thin;
+}
+
+.left-rail::-webkit-scrollbar {
+  width: 10px;
+}
+
+.left-rail::-webkit-scrollbar-thumb {
+  background: rgba(86, 108, 131, 0.25);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.left-rail::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-heading {
+  align-items: flex-end;
+  color: var(--text-primary);
+  display: flex;
+  gap: 6px;
+}
+
+.section-heading h2 {
+  color: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 21px;
+  margin: 0;
+}
+
+.section-heading__info {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  cursor: help;
+  display: inline-flex;
+  height: 20px;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  width: 20px;
+  z-index: 1;
+}
+
+.section-heading__info img {
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+
+.section-heading__info::after {
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 5px;
+  color: #ffffff;
+  content: attr(data-tooltip);
+  font-size: 12px;
+  left: 50%;
+  line-height: 1.4;
+  max-width: 220px;
+  opacity: 0;
+  padding: 8px 10px;
+  pointer-events: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+  visibility: hidden;
+  white-space: normal;
+  width: max-content;
+  z-index: 5;
+}
+
+.section-heading__info:hover::after,
+.section-heading__info:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  visibility: visible;
+}
+
+.section-heading__info:focus-visible {
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(86, 108, 131, 0.18);
+  outline: none;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-card {
+  --indicator-size: 20px;
+  --preview-width: 179px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+  width: 100%;
+}
+
+.option-card:hover {
+  border: 1px solid #42566b;
+  border-radius: 0.3125rem;
+  box-shadow: 0 0 7.9px 0 #566c83;
+}
+
+.option-card:focus-visible {
+  border-color: rgba(86, 108, 131, 0.45);
+  box-shadow: 0 0 0 3px rgba(86, 108, 131, 0.14);
+  outline: none;
+}
+
+.option-card.is-selected {
+  border-color: #42566b;
+  box-shadow: inset 0 0 0 1px rgba(86, 108, 131, 0.06);
+}
+
+.option-card.is-selected:hover {
+  border: 1px solid #42566b;
+  border-radius: 0.3125rem;
+  box-shadow: 0 0 7.9px 0 #566c83;
+}
+
+.option-card--open {
+  border-color: #42566b;
+  box-shadow: 0 0 7.9px rgba(86, 108, 131, 0.72);
+  overflow: visible;
+}
+
+.option-card__main {
+  align-items: stretch;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  display: grid;
+  grid-template-columns: minmax(0, 221px) minmax(140px, var(--preview-width));
+  min-height: 60px;
+  overflow: hidden;
+}
+
+.option-card--tall .option-card__main {
+  min-height: 69px;
+}
+
+.option-card__select {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  min-width: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.option-card__body {
+  align-items: center;
+  background: var(--surface);
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px 18px;
+}
+
+.option-card__label {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  min-width: 0;
+}
+
+.option-card__label--small {
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.option-card__label strong {
+  font-weight: 700;
+}
+
+.option-card__label u {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 1px;
+}
+
+.selection-indicator {
+  background: #fff;
+  border: 1.5px solid #566c83;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: var(--indicator-size);
+  justify-content: center;
+  position: relative;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+  width: var(--indicator-size);
+}
+
+.selection-indicator--radio {
+  border-radius: 50%;
+}
+
+.selection-indicator--checkbox {
+  border-radius: 4px;
+}
+
+.selection-indicator.is-selected {
+  background: transparent;
+  border: 0;
+}
+
+.selection-indicator__icon {
+  display: block;
+  height: 100%;
+  width: var(--indicator-size);
+}
+
+.option-card__select:focus-visible,
+.option-card__preview-trigger:focus-visible,
+.option-card__control--select:focus-visible {
+  outline: none;
+}
+
+.option-card__select:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(86, 108, 131, 0.18);
+}
+
+.mini-indicator {
+  background: #fff;
+  border: 1px solid #566c83;
+  border-radius: 2px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 12px;
+  width: 12px;
+}
+
+.mini-indicator.is-selected {
+  border: 0;
+}
+
+.mini-indicator__icon {
+  display: block;
+  height: 12px;
+  width: 12px;
+}
+
+.option-card__preview {
+  background: #e3e3e3;
+  min-height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.option-card__preview-trigger {
+  border: 0;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  padding: 0;
+  width: 100%;
+}
+
+.option-card__preview-trigger:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(86, 108, 131, 0.18);
+}
+
+.option-card__preview img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.option-card__details {
+  align-items: center;
+  background: #f5f5fb;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 20px 18px;
+}
+
+.option-card__details--metric {
+  gap: 20px;
+}
+
+.option-card__detail-group {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+}
+
+.option-card__detail-choice {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.option-card__detail-choice-label,
+.option-card__detail-label {
+  color: #42566b;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.option-card__detail-spacer {
+  display: block;
+  flex: 0 0 auto;
+  height: 35px;
+  width: 161px;
+}
+
+.option-card__control-wrap {
+  flex: 0 0 auto;
+  position: relative;
+  width: 161px;
+}
+
+.option-card__control {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #42566b;
+  border-radius: 5px;
+  color: #42566b;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: space-between;
+  min-height: 35px;
+  padding: 8px 15px;
+  width: 161px;
+}
+
+.option-card__control--select {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.option-card__control--metric {
+  gap: 14px;
+}
+
+.option-card__control-primary {
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.option-card__control-note {
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.option-card__caret {
+  border-bottom: 1.5px solid #566c83;
+  border-right: 1.5px solid #566c83;
+  display: inline-block;
+  height: 6px;
+  margin-top: -3px;
+  transform: rotate(45deg);
+  transition: transform var(--transition);
+  width: 6px;
+}
+
+.option-card__caret.is-open {
+  transform: rotate(225deg);
+}
+
+.option-card__dropdown {
+  background: #ffffff;
+  border: 1px solid #42566b;
+  border-radius: 5px;
+  box-shadow: 0 10px 24px rgba(66, 86, 107, 0.18);
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  margin-top: 6px;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 4;
+}
+
+.option-card__dropdown-option {
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 18px;
+  padding: 10px 15px;
+  text-align: left;
+}
+
+.option-card__dropdown-option:hover,
+.option-card__dropdown-option.is-selected {
+  background: #f5f5fb;
+}
+
+.option-card__dropdown-option.is-selected {
+  font-weight: 700;
+}
+
+.preview--poster img {
+  filter: grayscale(1);
+  object-fit: none;
+  object-position: -18px -41px;
+  transform: rotate(-43.65deg) scale(1.25);
+}
+
+.preview--poster-color img {
+  filter: none;
+}
+
+.preview--uv img {
+  object-position: center 34%;
+}
+
+.preview--varnish img {
+  object-position: center 26%;
+}
+
+.preview--foil {
+  background: var(--hero-bg);
+}
+
+.preview--foil img {
+  object-position: center 38%;
+  transform: scale(1.13);
+}
+
+.preview--foil-3d img {
+  object-position: center 32%;
+}
+
+.preview--corner {
+  background: #e3e3e3;
+}
+
+.preview--corner img {
+  object-fit: contain;
+  object-position: center;
+  padding: 4px 48px;
+}
+
+.preview--variable {
+  background: #e3e3e3;
+}
+
+.preview--variable .stacked-print {
+  inset: 0;
+  position: absolute;
+}
+
+.preview--variable .stacked-print img {
+  height: auto;
+  object-fit: contain;
+  position: absolute;
+  width: 62px;
+}
+
+.preview--variable .stacked-print img:nth-child(1) {
+  left: 8px;
+  top: 22px;
+  transform: rotate(-30deg);
+}
+
+.preview--variable .stacked-print img:nth-child(2) {
+  left: 60px;
+  top: 0;
+  width: 43px;
+}
+
+.preview--variable .stacked-print img:nth-child(3) {
+  left: 102px;
+  top: 3px;
+  transform: rotate(15deg);
+  width: 59px;
+}
+
+.preview--edge {
+  background: #e3e3e3;
+}
+
+.preview--edge img {
+  height: 230px;
+  left: 26px;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  top: 16px;
+  width: 153px;
+}
+
+.preview--edge.preview--edge-border::before {
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.69);
+  content: "";
+  height: 230px;
+  left: 26px;
+  position: absolute;
+  top: 16px;
+  width: 153px;
+}
+
+.preview--edge.preview--edge-border img {
+  height: 206px;
+  left: 34px;
+  top: 23px;
+  width: 137px;
+}
+
+.preview--fsc {
+  background: #255c4d;
+}
+
+.preview--fsc img {
+  height: 54px;
+  left: 64px;
+  object-fit: contain;
+  position: absolute;
+  top: 7px;
+  width: 48px;
+}
+
+.warning-bubble {
+  align-items: center;
+  background: var(--warning-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  display: none;
+  gap: 20px;
+  padding: 11px 25px;
+}
+
+.warning-bubble__icon {
+  display: block;
+  flex: 0 0 auto;
+  height: 18px;
+  width: 21px;
+}
+
+.warning-bubble__text {
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.warning-bubble__text--compact {
+  font-size: 13px;
+}
+
+.special-effects-dialog__right {
+  background: #ffffff;
+  min-width: 0;
+  position: relative;
+}
+
+.hero-preview {
+  background: var(--hero-bg);
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-preview__media {
+  background: var(--hero-bg);
+  display: flex;
+  inset: 0 0 51px 0;
+  justify-content: flex-start;
+  overflow: hidden;
+  position: absolute;
+}
+
+.hero-preview__media img {
+  height: 100%;
+  object-fit: contain;
+  object-position: left top;
+  width: 100%;
+}
+
+.hero-preview__fade {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 14%);
+  bottom: 0;
+  height: 7rem;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  width: min(53rem, 100%);
+}
+
+.hero-preview__copy {
+  bottom: 28px;
+  color: var(--text-secondary);
+  left: 24px;
+  max-width: 520px;
+  position: absolute;
+  z-index: 1;
+}
+
+.hero-preview__copy h1 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 18px;
+  margin: 0 0 9px;
+}
+
+.hero-preview__copy p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 19.2px;
+  margin: 0;
+}
+
+.hero-preview__copy a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.close-button {
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(90deg, #566c83 0%, #566c83 100%);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  height: 22px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  width: 22px;
+  z-index: 2;
+}
+
+.close-button span {
+  display: inline-block;
+  height: 9px;
+  position: relative;
+  width: 9px;
+}
+
+.close-button span::before,
+.close-button span::after {
+  background: #ffffff;
+  content: "";
+  height: 1.8px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform-origin: center;
+  width: 10px;
+}
+
+.close-button span::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-button span::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.close-button:focus-visible,
+.reopen-button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(86, 108, 131, 0.18);
+  outline: none;
+}
+
+.reopen-button {
+  background: #566c83;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 12px 18px;
+}
+
+.sr-only {
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@media (max-width: 1100px) {
+  .page-shell {
+    padding: 16px;
+  }
+
+  .special-effects-dialog {
+    grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .hero-preview__copy {
+    left: 20px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 860px) {
+  .page-shell {
+    align-items: stretch;
+    min-height: auto;
+  }
+
+  .special-effects-dialog {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 32px);
+  }
+
+  .special-effects-dialog__right {
+    min-height: 340px;
+    order: -1;
+  }
+
+  .special-effects-dialog__left {
+    min-height: 0;
+  }
+
+  .left-rail {
+    height: auto;
+    max-height: none;
+  }
+
+  .option-card__main {
+    grid-template-columns: minmax(0, 1fr) 142px;
+  }
+
+  .option-card__details {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .option-card__control-wrap,
+  .option-card__detail-spacer,
+  .option-card__control {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .page-shell {
+    padding: 0;
+  }
+
+  .special-effects-dialog {
+    border-left: 0;
+    border-radius: 0;
+    border-right: 0;
+    min-height: 100vh;
+  }
+
+  .left-rail {
+    padding: 16px;
+  }
+
+  .option-card__main {
+    grid-template-columns: minmax(0, 1fr) 126px;
+  }
+
+  .option-card__body {
+    padding: 16px 14px;
+  }
+
+  .option-card__label {
+    font-size: 15px;
+  }
+
+  .warning-bubble {
+    gap: 14px;
+    padding: 12px 16px;
+  }
+
+  .warning-bubble__text,
+  .warning-bubble__text--compact {
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .option-card__detail-choice-label,
+  .option-card__detail-label,
+  .option-card__control--select,
+  .option-card__control-primary {
+    font-size: 14px;
+  }
+
+  .option-card__control-note {
+    font-size: 11px;
+  }
+
+  .hero-preview__copy {
+    bottom: 22px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .hero-preview__copy p {
+    max-width: 40ch;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <main class="page-shell">
+      <button class="reopen-button" id="reopenButton" type="button" hidden>
+        Open special effects
+      </button>
+
+      <section
+        class="special-effects-dialog"
+        id="specialEffectsDialog"
+        role="dialog"
+        aria-describedby="previewDescription"
+        aria-labelledby="previewTitle"
+      >
+        <div class="special-effects-dialog__left">
+          <div class="left-rail" id="leftRail"></div>
+        </div>
+
+        <div class="special-effects-dialog__right">
+          <button
+            class="close-button"
+            id="closeButton"
+            type="button"
+            aria-label="Close special effects dialog"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+
+          <div class="hero-preview">
+            <div class="hero-preview__media">
+              <img id="heroImage" src="" alt="" />
+            </div>
+
+            <div class="hero-preview__fade"></div>
+
+            <div class="hero-preview__copy">
+              <h1 id="previewTitle"></h1>
+              <p id="previewDescription"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+const githubAssetBase =
+  "https://raw.githubusercontent.com/Jakub-os/pu/main";
+
+function localAsset(folder, fileName) {
+  return `${githubAssetBase}/${encodeURIComponent(folder)}/${encodeURIComponent(fileName)}`;
+}
+
+const thumbnailFolder = "thumbnail";
+// The user-facing detailed preview folder is currently empty, so the populated
+// folder is used for the large right-side preview images.
+const detailFolder = "big preview";
+const iconFolder = "icons";
+
+const iconAssets = {
+  checkbox: localAsset(iconFolder, "checkbox.svg"),
+  info: localAsset(iconFolder, "i.ep-info-simple.svg"),
+  radio: localAsset(iconFolder, "radio button.svg"),
+  warning: localAsset(iconFolder, "warning.svg"),
+};
+
+const imageLibrary = {
+  "black-white": {
+    thumb: localAsset(thumbnailFolder, "Black & white printing.jpg"),
+    detail: localAsset(detailFolder, "Black & white printing.jpg"),
+    alt: "Black and white printing sample",
+  },
+  colored: {
+    thumb: localAsset(thumbnailFolder, "Colored printing.jpg"),
+    detail: localAsset(detailFolder, "Colored printing.jpg"),
+    alt: "Colored printing sample",
+  },
+  "partial-uv": {
+    thumb: localAsset(thumbnailFolder, "Partial UV Varnish.jpg"),
+    detail: localAsset(detailFolder, "Partial UV Varnish.jpg"),
+    alt: "Partial UV varnish sample",
+  },
+  "3d-varnish": {
+    thumb: localAsset(thumbnailFolder, "3D Varnish.jpg"),
+    detail: localAsset(detailFolder, "3D Varnish.jpg"),
+    alt: "3D varnish sample",
+  },
+  "foil-treatment": {
+    thumb: localAsset(thumbnailFolder, "Foil Treatment.jpg"),
+    detail: localAsset(detailFolder, "Foil Treatment.jpg"),
+    alt: "Foil treatment sample",
+  },
+  "3d-foil": {
+    thumb: localAsset(thumbnailFolder, "3D Foil.jpg"),
+    detail: localAsset(detailFolder, "3D Foil.jpg"),
+    alt: "3D foil sample",
+  },
+  "corner-rounding": {
+    thumb: localAsset(thumbnailFolder, "Corner rounding.jpg"),
+    detail: localAsset(detailFolder, "Corner rounding.jpg"),
+    alt: "Corner rounding sample",
+  },
+  "variable-print": {
+    thumb: localAsset(thumbnailFolder, "Variable print.jpg"),
+    detail: localAsset(detailFolder, "Variable print.jpg"),
+    alt: "Variable print sample",
+  },
+  "print-edge": {
+    thumb: localAsset(thumbnailFolder, "Print to edge.jpg"),
+    detail: localAsset(detailFolder, "Print to edge.jpg"),
+    alt: "Print to edge sample",
+  },
+  "white-border": {
+    thumb: localAsset(thumbnailFolder, "Print with white border.jpg"),
+    detail: localAsset(detailFolder, "Print with white border.jpg"),
+    alt: "Print with white border sample",
+  },
+  "fsc-certificate": {
+    thumb: localAsset(
+      thumbnailFolder,
+      "FSC Certificate for my product + 25 \u20ac.jpg"
+    ),
+    detail: localAsset(
+      detailFolder,
+      "fsc image.jpg"
+    ),
+    alt: "FSC certification sample",
+  },
+};
+
+const previewContent = {
+  "black-white": {
+    titleHtml: "Black &amp; white printing",
+    titleText: "Black and white printing",
+    description:
+      "A clean monochrome print option with strong contrast and a classic editorial feel. ",
+  },
+  colored: {
+    titleHtml: "Colored printing",
+    titleText: "Colored printing",
+    description:
+      "Full-color printing brings artwork, gradients, and brand palettes to life with more visual depth. ",
+  },
+  "partial-uv": {
+    titleHtml: "What is Partial UV Varnish?",
+    titleText: "Partial UV Varnish",
+    description:
+      "Selective gloss highlights key areas to create contrast, shine, and a tactile premium feel. ",
+  },
+  "3d-varnish": {
+    titleHtml: "What is 3D Varnish?",
+    titleText: "3D Varnish",
+    description:
+      "Raised varnish adds measurable depth so highlighted details catch light and feel embossed to the touch. ",
+  },
+  "foil-treatment": {
+    titleHtml: "What is Foil Treatment?",
+    titleText: "Foil Treatment",
+    description:
+      "We posses a new surface treatment tool Accuro Shine. ",
+  },
+  "3d-foil": {
+    titleHtml: "What is 3D Foil?",
+    titleText: "3D Foil",
+    description:
+      "3D foil combines metallic shine with raised structure for a sculpted effect that stands out in hand and in light. ",
+  },
+  "corner-rounding": {
+    titleHtml: "Corner rounding",
+    titleText: "Corner rounding",
+    description:
+      "Rounded corners soften the silhouette of the card and give the final piece a more refined finish. ",
+  },
+  "variable-print": {
+    titleHtml: "Variable print",
+    titleText: "Variable print",
+    description:
+      "Personalized fields like names, codes, or numbers can change from print to print without changing the layout. ",
+  },
+  "print-edge": {
+    titleHtml: "Print to edge",
+    titleText: "Print to edge",
+    description:
+      "Artwork extends to the trim edge for a bold, full-bleed look with no white margin. ",
+  },
+  "white-border": {
+    titleHtml: "Print with white border",
+    titleText: "Print with white border",
+    description:
+      "A white margin frames the composition and creates a more gallery-like presentation. ",
+  },
+  "fsc-certificate": {
+    titleHtml: "FSC&reg; Certification",
+    titleText: "FSC Certification",
+    description:
+      "Choose an FSC-certified option to highlight environmentally responsible sourcing for your printed product. ",
+  },
+};
+
+const optionDetails = {
+  "partial-uv": {
+    type: "sides",
+    sides: ["front", "back"],
+  },
+  "3d-varnish": {
+    type: "sides",
+    sides: ["front", "back"],
+  },
+  "foil-treatment": {
+    type: "sides-select",
+    sides: ["front", "back"],
+    options: ["Gold Foil", "Silver Foil"],
+    defaultValue: "Gold Foil",
+  },
+  "3d-foil": {
+    type: "sides-select",
+    sides: ["front", "back"],
+    options: ["Gold Foil", "Silver Foil"],
+    defaultValue: "Gold Foil",
+  },
+  "variable-print": {
+    type: "metric",
+    label: "Number of PDF pages",
+    value: "250",
+    note: "= 250 sheets",
+  },
+};
+
+function createDetailState() {
+  return Object.fromEntries(
+    Object.entries(optionDetails).map(([optionId, detail]) => {
+      if (detail.type === "metric") {
+        return [optionId, { value: detail.value, note: detail.note }];
+      }
+
+      const sides = Object.fromEntries(detail.sides.map((side) => [side, false]));
+
+      if (detail.type === "sides-select") {
+        return [
+          optionId,
+          {
+            sides,
+            value: detail.defaultValue,
+            dropdownOpen: false,
+          },
+        ];
+      }
+
+      return [optionId, { sides }];
+    })
+  );
+}
+
+const sections = [
+  {
+    id: "color",
+    title: "Color",
+    type: "radio",
+    options: [
+      {
+        id: "black-white",
+        label: "Black & white printing",
+        tall: true,
+      },
+      {
+        id: "colored",
+        label: "Colored printing",
+      },
+    ],
+  },
+  {
+    id: "surfaceTreatment",
+    title: "Select Surface Treatment",
+    type: "multi-checkbox",
+    info: "Learn more about the available surface treatment effects.",
+    warning:
+      "You've selected a material without surface treatment. To apply a surface treatment, please choose a material with surface treatment.",
+    options: [
+      {
+        id: "partial-uv",
+        label: "Partial UV Varnish",
+      },
+      {
+        id: "3d-varnish",
+        label: "3D Varnish",
+      },
+      {
+        id: "foil-treatment",
+        label: "Foil Treatment",
+      },
+      {
+        id: "3d-foil",
+        label: "3D Foil",
+      },
+    ],
+  },
+  {
+    id: "extraSettings",
+    title: "Extra Settings",
+    type: "multi-checkbox",
+    options: [
+      {
+        id: "corner-rounding",
+        label: "Corner rounding",
+      },
+      {
+        id: "variable-print",
+        label: "Variable print",
+      },
+    ],
+  },
+  {
+    id: "graphicsType",
+    title: "Graphics type",
+    type: "radio",
+    info: "Choose how the artwork should sit on the finished card.",
+    options: [
+      {
+        id: "print-edge",
+        label: "Print to edge",
+      },
+      {
+        id: "white-border",
+        label: "Print with white border",
+        tall: true,
+      },
+    ],
+  },
+  {
+    id: "fsc",
+    title: "FSC&reg; Certification",
+    type: "multi-checkbox",
+    info: "Certification options for sustainably sourced material choices.",
+    warning:
+      "To ensure your product is recognised as being made from environmentally friendly materials, please choose materials marked with the FSC&reg; label.",
+    options: [
+      {
+        id: "fsc-certificate",
+        labelHtml:
+          "<u>FSC Certificate for my product + </u><strong>25 &euro;</strong>",
+        previewLabel: "FSC Certification",
+        smallLabel: true,
+        tall: true,
+      },
+    ],
+  },
+];
+
+function getFirstOptionId(sectionId) {
+  const section = sections.find((item) => item.id === sectionId);
+  return section && section.options.length > 0 ? section.options[0].id : null;
+}
+
+const state = {
+  color: getFirstOptionId("color"),
+  surfaceTreatment: new Set(),
+  extraSettings: new Set(),
+  graphicsType: getFirstOptionId("graphicsType"),
+  fsc: new Set(),
+  detailControls: createDetailState(),
+  activePreview: getFirstOptionId("color"),
+  closed: false,
+};
+
+const leftRail = document.getElementById("leftRail");
+const heroImage = document.getElementById("heroImage");
+const previewTitle = document.getElementById("previewTitle");
+const previewDescription = document.getElementById("previewDescription");
+const dialog = document.getElementById("specialEffectsDialog");
+const closeButton = document.getElementById("closeButton");
+const reopenButton = document.getElementById("reopenButton");
+
+function escapeAttribute(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function buildWarningMarkup(text, compact = false) {
+  return `
+    <div class="warning-bubble" role="note">
+      <img class="warning-bubble__icon" src="${iconAssets.warning}" alt="" aria-hidden="true" />
+      <p class="warning-bubble__text${compact ? " warning-bubble__text--compact" : ""}">
+        ${text}
+      </p>
+    </div>
+  `;
+}
+
+function getIndicatorClass(sectionType) {
+  return sectionType === "radio"
+    ? "selection-indicator--radio"
+    : "selection-indicator--checkbox";
+}
+
+function getIndicatorAsset(sectionType) {
+  return sectionType === "radio" ? iconAssets.radio : iconAssets.checkbox;
+}
+
+function getIndicatorMarkup(sectionType, selected) {
+  if (!selected) {
+    return "";
+  }
+
+  const asset = getIndicatorAsset(sectionType);
+  const label = sectionType === "radio" ? "Selected radio button" : "Selected checkbox";
+
+  return `<img class="selection-indicator__icon" src="${asset}" alt="${label}" />`;
+}
+
+function getMiniIndicatorMarkup(selected) {
+  if (!selected) {
+    return `<span class="mini-indicator" aria-hidden="true"></span>`;
+  }
+
+  return `<span class="mini-indicator is-selected" aria-hidden="true">
+    <img class="mini-indicator__icon" src="${iconAssets.checkbox}" alt="" />
+  </span>`;
+}
+
+function isSelected(sectionId, optionId) {
+  if (sectionId === "surfaceTreatment") {
+    return state.surfaceTreatment.has(optionId);
+  }
+
+  if (sectionId === "extraSettings") {
+    return state.extraSettings.has(optionId);
+  }
+
+  if (sectionId === "graphicsType") {
+    return state.graphicsType === optionId;
+  }
+
+  if (sectionId === "fsc") {
+    return state.fsc.has(optionId);
+  }
+
+  return state.color === optionId;
+}
+
+function getRole(sectionType) {
+  return sectionType === "radio" || sectionType === "single-checkbox"
+    ? "radio"
+    : "checkbox";
+}
+
+function isOpen(optionId, selected) {
+  return selected && Boolean(optionDetails[optionId]);
+}
+
+function renderSideOptionsMarkup(optionId, sides) {
+  const detailState = state.detailControls[optionId];
+
+  return sides
+    .map(
+      (side) => `
+        <span class="option-card__detail-choice" data-action="toggle-side" data-option="${optionId}" data-side="${side}">
+          ${getMiniIndicatorMarkup(detailState.sides[side])}
+          <span class="option-card__detail-choice-label">${side}</span>
+        </span>
+      `
+    )
+    .join("");
+}
+
+function renderOptionDetailsMarkup(optionId) {
+  const detail = optionDetails[optionId];
+
+  if (!detail) {
+    return "";
+  }
+
+  if (detail.type === "metric") {
+    const detailState = state.detailControls[optionId];
+
+    return `
+      <span class="option-card__details option-card__details--metric">
+        <span class="option-card__detail-label">${detail.label}</span>
+        <span class="option-card__control option-card__control--metric" aria-hidden="true">
+          <span class="option-card__control-primary">${detailState.value}</span>
+          <span class="option-card__control-note">${detailState.note}</span>
+        </span>
+      </span>
+    `;
+  }
+
+  const detailState = state.detailControls[optionId];
+  const controlMarkup =
+    detail.type === "sides-select"
+      ? `
+        <span class="option-card__control-wrap">
+          <span class="option-card__control option-card__control--select" data-action="toggle-dropdown" data-option="${optionId}" aria-expanded="${detailState.dropdownOpen ? "true" : "false"}">
+            <span>${detailState.value}</span>
+            <span class="option-card__caret${detailState.dropdownOpen ? " is-open" : ""}"></span>
+          </span>
+          ${
+            detailState.dropdownOpen
+              ? `<span class="option-card__dropdown" role="listbox">
+                  ${detail.options
+                    .map(
+                      (value) => `
+                        <span class="option-card__dropdown-option${detailState.value === value ? " is-selected" : ""}" data-action="select-dropdown" data-option="${optionId}" data-value="${value}">
+                          ${value}
+                        </span>
+                      `
+                    )
+                    .join("")}
+                </span>`
+              : ""
+          }
+        </span>
+      `
+      : `<span class="option-card__detail-spacer" aria-hidden="true"></span>`;
+
+  return `
+    <span class="option-card__details">
+      <span class="option-card__detail-group">
+        ${renderSideOptionsMarkup(optionId, detail.sides)}
+      </span>
+      ${controlMarkup}
+    </span>
+  `;
+}
+
+function getThumbnailMarkup(optionId, label) {
+  const image = imageLibrary[optionId];
+
+  if (!image) {
+    return "";
+  }
+
+  return `<img src="${image.thumb}" alt="${escapeAttribute(label)} preview" loading="lazy" />`;
+}
+
+function renderSections() {
+  leftRail.innerHTML = sections
+    .map((section) => {
+      const isRadioLike = section.type === "radio";
+      const groupRole = isRadioLike ? "radiogroup" : "group";
+
+      return `
+        <section class="panel-section" aria-labelledby="heading-${section.id}">
+          <div class="section-heading">
+            <h2 id="heading-${section.id}">${section.title}</h2>
+            ${
+              section.info
+                ? `<button class="section-heading__info" type="button" aria-label="${escapeAttribute(section.info)}" data-tooltip="${escapeAttribute(section.info)}">
+                    <img src="${iconAssets.info}" alt="" aria-hidden="true" />
+                  </button>`
+                : ""
+            }
+          </div>
+          <div class="option-list" role="${groupRole}" aria-label="${section.title}">
+            ${section.options
+              .map((option) => {
+                const selected = isSelected(section.id, option.id);
+                const indicatorClass = getIndicatorClass(section.type);
+                const labelClass = option.smallLabel
+                  ? "option-card__label option-card__label--small"
+                  : "option-card__label";
+                const previewLabel =
+                  option.previewLabel || option.label || section.title;
+                const open = isOpen(option.id, selected);
+
+                return `
+                  <div
+                    class="option-card${selected ? " is-selected" : ""}${open ? " option-card--open" : ""}${option.tall ? " option-card--tall" : ""}"
+                    data-section="${section.id}"
+                    data-option="${option.id}"
+                  >
+                    <span class="option-card__main">
+                      <button
+                        class="option-card__select"
+                        type="button"
+                        data-action="select-option"
+                        data-section="${section.id}"
+                        data-option="${option.id}"
+                        role="${getRole(section.type)}"
+                        aria-checked="${selected ? "true" : "false"}"
+                      >
+                        <span class="option-card__body">
+                          <span class="selection-indicator ${indicatorClass}${selected ? " is-selected" : ""}" aria-hidden="true">
+                            ${getIndicatorMarkup(section.type, selected)}
+                          </span>
+                          <span class="${labelClass}">
+                            ${option.labelHtml || option.label}
+                          </span>
+                        </span>
+                      </button>
+                      <button
+                        class="option-card__preview option-card__preview-trigger"
+                        type="button"
+                        data-action="preview-option"
+                        data-option="${option.id}"
+                        aria-label="Preview ${escapeAttribute(previewLabel)}"
+                      >
+                        ${getThumbnailMarkup(option.id, previewLabel)}
+                      </button>
+                    </span>
+                    ${open ? renderOptionDetailsMarkup(option.id) : ""}
+                  </div>
+                `;
+              })
+              .join("")}
+          </div>
+          ${
+            section.warning
+              ? buildWarningMarkup(section.warning, section.id === "fsc")
+              : ""
+          }
+        </section>
+      `;
+    })
+    .join("");
+}
+
+function updatePreview() {
+  const previewKey = state.activePreview || state.surfaceTreatment;
+  const content = previewContent[previewKey];
+  const image = imageLibrary[previewKey];
+
+  if (!content || !image) {
+    return;
+  }
+
+  heroImage.src = image.detail;
+  heroImage.alt = image.alt;
+  previewTitle.innerHTML = content.titleHtml;
+  previewDescription.innerHTML = `${content.description}<a href="#" aria-label="Read more about ${escapeAttribute(content.titleText)}">More</a>`;
+}
+
+function setSingleValue(sectionId, optionId) {
+  if (sectionId === "color") {
+    state.color = optionId;
+    return;
+  }
+
+  if (sectionId === "graphicsType") {
+    state.graphicsType = optionId;
+  }
+}
+
+function toggleMultiValue(sectionId, optionId) {
+  let targetSet = state.extraSettings;
+
+  if (sectionId === "surfaceTreatment") {
+    targetSet = state.surfaceTreatment;
+  } else if (sectionId === "fsc") {
+    targetSet = state.fsc;
+  }
+
+  if (targetSet.has(optionId)) {
+    targetSet.delete(optionId);
+    return;
+  }
+
+  targetSet.add(optionId);
+}
+
+function toggleDetailSide(optionId, side) {
+  const detailState = state.detailControls[optionId];
+
+  if (!detailState || !detailState.sides || !(side in detailState.sides)) {
+    return;
+  }
+
+  detailState.sides[side] = !detailState.sides[side];
+}
+
+function closeAllDropdowns() {
+  Object.values(state.detailControls).forEach((detailState) => {
+    if (detailState && "dropdownOpen" in detailState) {
+      detailState.dropdownOpen = false;
+    }
+  });
+}
+
+function toggleDropdown(optionId) {
+  const detailState = state.detailControls[optionId];
+
+  if (!detailState || !("dropdownOpen" in detailState)) {
+    return;
+  }
+
+  const nextState = !detailState.dropdownOpen;
+  closeAllDropdowns();
+  detailState.dropdownOpen = nextState;
+}
+
+function selectDropdownValue(optionId, value) {
+  const detailState = state.detailControls[optionId];
+
+  if (!detailState || !("value" in detailState)) {
+    return;
+  }
+
+  detailState.value = value;
+  detailState.dropdownOpen = false;
+}
+
+function handleOptionClick(event) {
+  const dropdownOption = event.target.closest("[data-action='select-dropdown']");
+
+  if (dropdownOption) {
+    selectDropdownValue(
+      dropdownOption.dataset.option,
+      dropdownOption.dataset.value
+    );
+    state.activePreview = dropdownOption.dataset.option;
+    renderSections();
+    updatePreview();
+    return;
+  }
+
+  const dropdownToggle = event.target.closest("[data-action='toggle-dropdown']");
+
+  if (dropdownToggle) {
+    toggleDropdown(dropdownToggle.dataset.option);
+    state.activePreview = dropdownToggle.dataset.option;
+    renderSections();
+    updatePreview();
+    return;
+  }
+
+  const detailChoice = event.target.closest("[data-action='toggle-side']");
+
+  if (detailChoice) {
+    toggleDetailSide(detailChoice.dataset.option, detailChoice.dataset.side);
+    state.activePreview = detailChoice.dataset.option;
+    renderSections();
+    updatePreview();
+    return;
+  }
+
+  const previewTrigger = event.target.closest("[data-action='preview-option']");
+
+  if (previewTrigger) {
+    state.activePreview = previewTrigger.dataset.option;
+    renderSections();
+    updatePreview();
+    return;
+  }
+
+  const selectTrigger = event.target.closest("[data-action='select-option']");
+
+  if (!selectTrigger) {
+    return;
+  }
+
+  const { section, option } = selectTrigger.dataset;
+  const sectionConfig = sections.find((item) => item.id === section);
+
+  if (!sectionConfig) {
+    return;
+  }
+
+  if (sectionConfig.type === "multi-checkbox") {
+    toggleMultiValue(section, option);
+  } else {
+    setSingleValue(section, option);
+  }
+
+  state.activePreview = option;
+  renderSections();
+  updatePreview();
+}
+
+function setClosed(closed) {
+  state.closed = closed;
+  dialog.classList.toggle("is-closed", closed);
+  dialog.hidden = closed;
+  dialog.setAttribute("aria-hidden", closed ? "true" : "false");
+  reopenButton.hidden = !closed;
+}
+
+leftRail.addEventListener("click", handleOptionClick);
+
+closeButton.addEventListener("click", () => {
+  setClosed(true);
+});
+
+reopenButton.addEventListener("click", () => {
+  setClosed(false);
+  closeButton.focus();
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".hero-preview__copy a")) {
+    event.preventDefault();
+  }
+
+  if (!event.target.closest(".option-card__control-wrap")) {
+    closeAllDropdowns();
+    renderSections();
+  }
+});
+
+renderSections();
+updatePreview();
+
+    </script>
+  </body>
+</html>
+
